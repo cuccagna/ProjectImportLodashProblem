@@ -1,0 +1,34 @@
+@use './mixin';
+
+
+body{
+   @include mixin.impostaMarginPadding(0,0);
+   font-size: 1em;
+   line-height:1.3;
+}
+
+ul{
+   @include mixin.impostaMarginPadding(0, 0);
+   list-style: none;
+}
+
+img {
+   width: 400px;
+}
+
+figure {
+   display: inline-block;
+}
+
+a{
+   display: block;
+   width:fit-content;
+   margin: 20px ;
+   padding: 15px;
+   background-color: blue;
+   color: yellow;
+   cursor: pointer;
+   border: 4px solid yellow;
+   text-decoration: none;
+}
+

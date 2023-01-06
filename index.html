@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8" />
+      <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Document</title>
+      <link rel="stylesheet" href="./dist/css/main.css" />
+   </head>
+   <body>
+      <!--  
+         IL SEGUENTE CODICE NON FUNZIONA SENZA UN SERVER. L'import di LODASH NON FUNZIONA
+         SENZA UN SERVER. USARE LIVESERVER o DEVSERVER in developmente mode
+
+         Potresti volere usare delle librerie come lodash che sono molto grandi. Le importerai
+         dagli entrypoint js. In questo modo i tuoi bundle includeranno anche queste librerie.
+         Queste librerie fanno aumentare parecchio la dimensione del tuo bundle, se modifichi
+         il tuo codice il tuo bundle cambia e costringi l'utente a riscaricarsi tutto anche
+         la libreria inclusa nel bundle. Inoltre se la libreria è inclusa in bundle multipli
+         la stai scaricando più volte, in ogni bundle in cui è inclusa.
+         Allora potresti pensare di separare la tua libreria lodash (ad esempio) in un bundle
+         separato (con lo svantaggio che avrai una richiesta http in più solo la prima volta
+         che apri la pagina).
+
+         Qui vediamo come aggiungere un bundle in più per librerie così grandi (in questi
+         casi conviene).
+
+         Intanto installo lodash come dependencies con
+         npm i lodash --save
+
+         Poi faccio 
+         import _ from 'lodash';
+
+         sia da index.js che da ananasEntryPoint.js
+         Poi nel componente main-header modifico la funzione render() aggiungendo
+         un parametro che costituirà il testo del titolo <h1> che verrà aggiunto
+         Passo il titolo come parametro e uso _.upperFirst() per metter in maiuscolo
+         la prima lettera.
+         In questo modo i due bundle includeranno entrambi la libreria lodash.
+
+         Per mettere fuori la libreria dai due bundle usiamo come opzione allo stesso
+         livello di mode, optimization
+         
+         optimization: {
+            splitChunks: {
+         chunks:'all'
+      }
+
+      In questo modo puoi vedere che mentre prima avevi due bundle emessi di circa 100 kb
+      ora sono molto piu piccoli e la libreria lodash viene emessa in un file a parte.
+
+      Il problema è che così devi modificare index.ejs ed ananas.ejs perchè devi includere
+      anche questa libreria in uno script aggiuntivo.
+      Se invece vuoi che la cosa avvenga in automatico ,e qui ho fatto così,anzichè 
+      inject:false
+      puoi usare
+
+      inject:'body'
+      chunks:['ananas']
+
+      e
+      inject:'body'
+      chunks:['home']
+
+      Serve specificare anche chunks perchè altrimenti tutti i bundles verranno aggiunti
+      a ogni pagina html
+
+      QUindi ho dovuto modificare index.ejs e ananas.ejs
+      Nota che adesso nella pagina ho due tag script, uno per lodash e un altro
+      per il mio codice javascript
+      
+      -------
+      La creazione di un nuovo bundle avviene solo se la dipendenza (cioè quello che stai
+      importando) supera 20kb.  Cioè qui lodash è circa 70 kbyte allora viene creato un 
+      budle separato, per gli altri import no.
+      Puoi cambiare la soglia mettendo
+      minSize:2048  come option di splitChunks per impostare la soglia a 2 Kilobyte
+
+      Nota che la soglia si riferisce alla dimensione del file js importato prima di
+      essere minificato.
+
+      Esiste anche 
+      maxSize :10000
+      questo dice a webpack di spezzare un chunk in chunks più piccoli se la soglia
+      di 10000 byte è superata. Per default è zero
+
+      Nota che qui ho anche impostato webpack.dev.config.js  in modo da avere più
+      entri points (qui non serve avere piu chunks per lodash perchè è un'ottimizzazione
+      che nonnserve in development stage quindi non ho la voce optimization)
+
+      NOTA BENISSIMO
+      ALcune immagini sono importate tramite js e il src viene impostato tramite js per cui
+      è bene che il codice js sia disponibile il prima possibile. Se lo metto nel tag head
+      con defer è meglio perchè così inizio a scaricarla. Si abbatte il tempo di loading
+      della pagina
+
+   }
+
+      -->
+
+      <img src="./assets/img/natura.jpg" alt="Natura.jpg" />
+      <img src="./assets/img/natale.jpg" alt="Natale.jpg" />
+      <button class="hello-world-button">Ciao</button>
+      <img id="asset-resource" />
+      <a href="./ananas.html">Vai alla pagina dell'ananas</a>
+      <script src="./dist/js/bundle.js"></script>
+   </body>
+</html>
